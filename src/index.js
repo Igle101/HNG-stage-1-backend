@@ -57,8 +57,7 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`[server]: Server is running at http://localhost:${PORT}`);
-  connectDB();
+  console.log(`Profiles endpoint: http://localhost:${PORT}/api/profiles`);
 });
  
 module.exports = app;
