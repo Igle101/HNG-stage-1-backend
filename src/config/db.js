@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
 
-const connectDB = async () => {
+async function connectDB() {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI|| '');
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`Error: ${error}`);
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
+    });
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('MongoDB connection error:', err.message);
     process.exit(1);
   }
-};
+}
 
 module.exports = connectDB;
