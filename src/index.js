@@ -1,13 +1,11 @@
 require('dotenv').config();
 console.log('MONGO URI:', process.env.MONGODB_URI ? 'loaded' : 'NOT FOUND');
+
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
 const app = express();
-
-// ← ADD THIS LINE
-connectDB();
 
 app.use(cors());
 app.use(express.json());
@@ -32,9 +30,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Profiles endpoint: http://localhost:${PORT}/api/profiles`);
+// Wait for DB connection BEFORE starting the server
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Profiles endpoint: http://localhost:${PORT}/api/profiles`);
+  });
 });
 
 module.exports = app;
