@@ -23,10 +23,10 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
+  console.error('Unhandled error FULL:', err.stack || err.message || err);
   res.status(500).json({
     status: 'error',
-    message: 'Internal server error',
+    message: err.message || 'Internal server error',
   });
 });
 
