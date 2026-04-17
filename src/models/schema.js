@@ -47,7 +47,7 @@ const profileSchema = new mongoose.Schema({
 
 });
 
-profileSchema.methods.toJson = function(){
+profileSchema.methods.toJSON = function(){
 const obj = this.toObject();
 return {
     id: obj._id,
