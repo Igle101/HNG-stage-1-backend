@@ -1,6 +1,6 @@
-
-const express = require('express');
 require('dotenv').config();
+console.log('MONGO URI:', process.env.MONGODB_URI ? 'loaded' : 'NOT FOUND');
+const express = require('express');
 
 const app = express();
 const connectDB =require('./config/db')
