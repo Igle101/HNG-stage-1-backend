@@ -1,32 +1,38 @@
-const fetch = require('node-fetch');
- 
+const https = require('https');
+
 const GENDERIZE_URL = 'https://api.genderize.io';
 const AGIFY_URL = 'https://api.agify.io';
 const NATIONALIZE_URL = 'https://api.nationalize.io';
- 
+
+// Helper to make HTTPS GET requests without any external package
+function httpsGet(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (err) {
+          reject(new Error('Failed to parse response'));
+        }
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+}
 
 async function fetchAllAPIs(name) {
   const encodedName = encodeURIComponent(name);
- 
-  const [genderRes, ageRes, nationRes] = await Promise.all([
-    fetch(`${GENDERIZE_URL}?name=${encodedName}`),
-    fetch(`${AGIFY_URL}?name=${encodedName}`),
-    fetch(`${NATIONALIZE_URL}?name=${encodedName}`),
-  ]);
- 
-  
-  
-  if (!genderRes.ok) throw new Error('Genderize');
-  if (!ageRes.ok) throw new Error('Agify');
-  if (!nationRes.ok) throw new Error('Nationalize');
- 
+
   const [genderData, ageData, nationData] = await Promise.all([
-    genderRes.json(),
-    ageRes.json(),
-    nationRes.json(),
+    httpsGet(`${GENDERIZE_URL}?name=${encodedName}`),
+    httpsGet(`${AGIFY_URL}?name=${encodedName}`),
+    httpsGet(`${NATIONALIZE_URL}?name=${encodedName}`),
   ]);
- 
+
   return { genderData, ageData, nationData };
 }
- 
+
 module.exports = { fetchAllAPIs };
