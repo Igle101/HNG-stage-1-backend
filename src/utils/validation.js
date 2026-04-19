@@ -1,30 +1,20 @@
-function toValidateNameBody(name){
-   
-        
+function toValidateNameBody(name) {
+  // Missing or empty
+  if (name === undefined || name === null || (typeof name === 'string' && name.trim() === '')) {
+    return { statusCode: 400, message: 'Missing or empty name' };
+  }
 
-    if(!name || name.trim() === '' || name === undefined){
-        return res.status(400).json({
-            status: ' error',
-            message: 'Missing or empty name',
-        })
-    };
-    if(!isNaN ( name)){
-        return {
-            statusCode: 422,
-            message: 'Entity: Invalid type',
-        }
-    };
-    if(typeof name !== 'string'){
-        return res.status(422).json({
-            status: 'error',
-            message:'Entity: Invalid type',
+  // Non-string type
+  if (typeof name !== 'string') {
+    return { statusCode: 422, message: 'Invalid type' };
+  }
 
+  // Numeric string
+  if (!isNaN(name)) {
+    return { statusCode: 422, message: 'Invalid type' };
+  }
 
-        })
-    };
-    return null;
-
-
+  return null;
 }
 
-module.exports = {toValidateNameBody};
+module.exports = { toValidateNameBody };
